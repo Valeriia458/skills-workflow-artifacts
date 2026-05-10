@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 20 # Note: Node 24 is very new; 20 is the current LTS
           cache: npm
       - run: npm ci
       - run: npm run build
@@ -23,17 +23,18 @@ jobs:
         with:
           name: octomatch
           path: dist
-    dev:
-      name: Deploy Dev
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/download-artifact@v8
-            with:
-              name: octomatch
-              path: website
-        - name: Deploy to Dev
-          run: |
-            echo "Downloaded artifact contents:"
-            tree website
-            echo "Demo deploy step: replace with your real deploy command."        
+
+  dev:
+    name: Deploy Dev
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: octomatch
+          path: website
+      - name: Deploy to Dev
+        run: |
+          echo "Downloaded artifact contents:"
+          ls -R website # Using ls -R as 'tree' isn't always installed by default
+          echo "Demo deploy step: replace with your real deploy command."
